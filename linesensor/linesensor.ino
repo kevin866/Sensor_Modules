@@ -4,6 +4,7 @@
 
 SensorBar mySensorBar(0x3E); // Default I2C address
 ArduinoLEDMatrix matrix;
+int analogValue;
 
 void setup()
 {
@@ -26,7 +27,6 @@ void setup()
 void loop()
 {
   uint8_t rawValue = mySensorBar.getRaw();
-
   // Print binary value
   Serial.print("Bin value of input: ");
   for (int i = 7; i >= 0; i--) {
@@ -54,5 +54,5 @@ void loop()
   // Send to matrix
   matrix.renderBitmap(display, 12, 8);
 
-  // delay(666);
+  delay(666);
 }

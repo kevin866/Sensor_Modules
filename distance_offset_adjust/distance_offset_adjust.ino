@@ -14,7 +14,7 @@ static uint8_t frame[9];
 static int index = 0;
 static uint16_t tfDistance = 0;  // store the latest lidar distance
 static uint16_t tfStrength = 0;
-
+static int tol = 2;
 void setup() {
   Serial.begin(115200);
   Serial3.begin(115200);       // TFmini Plus LiDAR serial port
@@ -47,81 +47,75 @@ void loop() {
   digitalWrite(TRIG_PIN, LOW);
 
   duration = pulseIn(ECHO_PIN, HIGH);
-  ultrasonicDistance = duration * 0.034 / 2.0; // Distance in cm
+  ultrasonicDistance = duration * 0.034 / 2.0;
 
   // --- Infrared Sensor ---
-  // float volts = analogRead(IR_SENSOR) * 0.0048828125;
-  // int irDistance = 13 * pow(volts, -1)*2.54;
-  float irgetdistance = sensor.getDistance()*2.54; //Calculate the distance in centimeters and store the value in a variable
+  float irDistance = sensor.getDistance() * 2.54;
 
-
-  // --- TFmini Plus LiDAR reading ---
+  // --- TFmini Plus LiDAR ---
   while (Serial3.available()) {
     uint8_t b = Serial3.read();
-
-    if (index == 0 && b != 0x59) {
-      continue;
-    }
-
+    if (index == 0 && b != 0x59) continue;
     frame[index++] = b;
-
-    if (index == 2 && frame[1] != 0x59) {
-      index = 0;
-      continue;
-    }
-
+    if (index == 2 && frame[1] != 0x59) { index = 0; continue; }
     if (index == 9) {
       index = 0;
-
       uint16_t distance = frame[2] + (frame[3] << 8);
       uint16_t strength = frame[4] + (frame[5] << 8);
       uint8_t checksum = 0;
       for (int i = 0; i < 8; i++) checksum += frame[i];
-
       if (checksum == frame[8]) {
         tfDistance = distance;
         tfStrength = strength;
-
-        // Serial.print("TFmini Distance: ");
-        // Serial.print(tfDistance);
-        // Serial.print(" cm | Strength: ");
-        // Serial.println(tfStrength);
-      } else {
-        Serial.println("Checksum failed (9-byte frame)");
       }
     }
   }
-  float tfDistancede = tfDistance;
 
-  // Print ultrasonic and IR sensor data to Serial
+  float lidarDistance = tfDistance;
+
+  // --- Sensor Fusion / Flicker Reduction ---
+  float referenceDistance;
+  bool useLidar = lidarDistance > 25;
+
+  if (useLidar) {
+    referenceDistance = lidarDistance;
+    // Adjust ultrasonic and IR toward LiDAR
+    ultrasonicDistance = abs(ultrasonicDistance - lidarDistance) < tol ? ultrasonicDistance : lidarDistance;
+    irDistance = abs(irDistance - lidarDistance) < tol ? irDistance : lidarDistance;
+  } else {
+    referenceDistance = ultrasonicDistance;
+    // Adjust IR and LiDAR toward Ultrasonic
+    irDistance = abs(irDistance - ultrasonicDistance) < tol ? irDistance : ultrasonicDistance;
+    lidarDistance = abs(lidarDistance - ultrasonicDistance) < tol ? lidarDistance : ultrasonicDistance;
+  }
+
+  // --- Serial Output ---
   Serial.print("Ultrasonic: ");
-  Serial.print(ultrasonicDistance);
+  Serial.print(ultrasonicDistance, 1);
   Serial.print(" cm\tIR: ");
-  Serial.print(irgetdistance);
+  Serial.print(irDistance, 1);
   Serial.print(" cm\tLiDAR: ");
-  Serial.print(tfDistance);
+  Serial.print(lidarDistance, 1);
   Serial.println(" cm");
 
-// Print to LCD with sensor names on first line and values aligned below
-  // lcd.clear();
+  // --- LCD Output ---
   lcd.setCursor(0, 0);
   lcd.print("US     IR     LiDAR");
 
   lcd.setCursor(0, 1);
-  // Format the values with spacing to align under names
   lcd.print(ultrasonicDistance, 1);
   lcd.setCursor(0, 2);
-
   lcd.print("cm");
-  
+
   lcd.setCursor(7, 1);
-  lcd.print(irgetdistance, 1);
+  lcd.print(irDistance, 1);
   lcd.setCursor(7, 2);
   lcd.print("cm");
 
   lcd.setCursor(14, 1);
-  lcd.print(tfDistancede, 1);
+  lcd.print(lidarDistance, 1);
   lcd.setCursor(14, 2);
-
   lcd.print("cm");
+
+  delay(100); // Optional: slight delay to reduce flickering
 }
