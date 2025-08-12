@@ -55,7 +55,7 @@ Used for line-following robots and navigation over predefined paths.
   8-channel reflectance sensor array to detect line position with high precision.
 
 * **Industrial Scale Line Follower**
-  *Component:* [Industrial Grade Line Sensor]()
+  *Component:* [Industrial Grade Line Sensor](https://www.roboteq.com/products/navigation-sensors/line-following-sensors/mgsw1600-magnetic-sensor-with-gyroscope-320-detail)
   (Insert your specific model here.) Designed for robust line tracking in factory environments.
 
 ---
