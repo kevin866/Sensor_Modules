@@ -1,7 +1,10 @@
 #include <Arduino.h>
 
-#define POT_PIN A0
+#define POT_PIN A14
 // website: https://www.digikey.com/en/products/detail/bourns-inc/3590S-2-201L/2534354?gclsrc=aw.ds&gad_source=1&gad_campaignid=20243136172&gbraid=0AAAAADrbLljzsCKHCttNxlRUGpN-4hTKM&gclid=Cj0KCQjwiJvQBhCYARIsAMjts3JYw1nXnSPnaX_IrtIpKePZCk7E9fWGcxRT7Eq39d1zEXlScpx7KdYaAljuEALw_wcB
+// blue 5V
+// white ground
+// green A14
 void setup()
 {
   Serial.begin(115200);

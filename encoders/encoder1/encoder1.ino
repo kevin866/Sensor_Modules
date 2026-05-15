@@ -3,6 +3,8 @@
 #include <digitalWriteFast.h>
 // product website:https://www.sparkfun.com/rotary-encoder-1024-p-r-quadrature.html#content-documentation
 // One encoder
+// brown +5V
+// Blue common/ground
 #define EncoderPinA 18   // black wire
 #define EncoderPinB 17   // white wire
 

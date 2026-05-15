@@ -1,15 +1,15 @@
 #include <Arduino.h>
 #include <SPI.h>
-// datasheet: https://www.sameskydevices.com/product/resource/amt22.
+// datasheet: https://www.sameskydevices.com/product/resource/amt22.pdf
 // wiring:
-// | AMT22 function | Cable color from sample | Arduino Mega pin |
+// | AMT22 function | Cable color from sample | Arduino Mega pin | left to right 
 // | -------------- | ----------------------- | ---------------: |
-// | +5V            | White/Green             |               5V |
-// | GND            | Green/White             |              GND |
-// | SCLK           | Blue/White              |              D52 |
-// | MOSI           | White/Blue              |              D51 |
-// | MISO           | Orange/White            |              D50 |
-// | CS             | White/Orange            |              D53 |
+// | +5V            | White/Green             |               5V |    1
+// | GND            | Green/White             |              GND |    4
+// | SCLK           | Blue/White              |              D52 |    2
+// | MOSI           | White/Blue              |              D51 |    3
+// | MISO           | Orange/White            |              D50 |    5
+// | CS             | White/Orange            |              D53 |    6
 
 #define BAUDRATE 115200
 
