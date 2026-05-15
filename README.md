@@ -104,18 +104,3 @@ This module demonstrates different ways to measure rotational position using inc
   *Component:* [Bourns 3590S-2-201L](https://www.digikey.com/en/products/detail/bourns-inc/3590S-2-201L/2534354)  
   A 10-turn analog position sensor that changes resistance as the shaft rotates. The Arduino reads the wiper voltage through an analog input and maps it to position. It is simple to use and useful for manual position feedback over a limited range.
 
- ## Encoders
-
-This module demonstrates three different ways to measure rotation. Each sensor gives position information in a different form, so they are useful in different situations.
-
-* **Quadrature Incremental Encoder**  
-  *Component:* [Rotary Encoder 1024 P/R Quadrature](https://www.electromaker.io/shop/product/rotary-encoder-1024-pr-quadrature)  
-  This encoder works like a digital “tick counter.” As the shaft rotates, it sends out pulses on two channels, A and B. By counting the pulses, the Arduino can tell how far the shaft has moved. Because the A and B signals are slightly offset, the Arduino can also tell which direction the shaft is turning. However, this encoder only measures movement after the system starts, so it does not know its exact starting angle unless a zero or home position is defined.
-
-* **Absolute SPI Encoder**  
-  *Component:* [Same Sky AMT22](https://www.sameskydevices.com/product/resource/amt22.pdf)  
-  This encoder works more like a digital angle sensor. Instead of only counting movement, it directly reports the shaft’s current angle through SPI communication. When the Arduino asks for the position, the encoder returns a digital value representing where the shaft is within one full rotation. This makes it useful when the system needs to know the actual position immediately after power-on.
-
-* **Multi-Turn Potentiometer**  
-  *Component:* [Bourns 3590S-2-201L](https://www.digikey.com/en/products/detail/bourns-inc/3590S-2-201L/2534354)  
-  This sensor works like an adjustable voltage divider. As the shaft turns, the output voltage changes smoothly. The Arduino reads this voltage using an analog input and maps it to position. Since this is a 10-turn potentiometer, it can track position over multiple rotations. It is simple and intuitive to use, but it is limited by its mechanical range and is not as precise or robust as a digital encoder.
